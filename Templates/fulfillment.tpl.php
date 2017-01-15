@@ -17,11 +17,11 @@
     </thead>
     <?php foreach ($order->getItems() as $item): ?>
     <tr>
-        <td><input type="checkbox" checked="checked" name="checkout_order_item[<?= $item['checkout_order_item_id']; ?>" value="1" /></td>
-        <td><?= $item['title']; ?></td>
-        <td><?= $item['options_formatted']; ?></td>
-        <td><?= $item['product']->getAggregateOption('printful_product', $item); ?></td>
-        <td><?= $item['product']->getAggregateOption('printful_image', $item); ?></td>
+        <td><input type="checkbox" checked="checked" name="checkout_order_item[<?= $item->id; ?>" value="1" /></td>
+        <td><?= $item->getProduct()->title; ?></td>
+        <td><?= $item->getHTMLFormattedOptions(); ?></td>
+        <td><?= $item->getAggregateOption('printful_product'); ?></td>
+        <td><?= $item->getAggregateOption('printful_image'); ?></td>
     </tr>
     <?php endforeach; ?>
 </table>

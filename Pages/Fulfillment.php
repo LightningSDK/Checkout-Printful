@@ -11,6 +11,7 @@ use Lightning\Tools\Communicator\RestClient;
 use Lightning\Tools\Configuration;
 use Lightning\Tools\Request;
 use Lightning\Tools\Template;
+use Modules\Checkout\Model\LineItem;
 use Modules\Checkout\Model\Order;
 
 class Fulfillment extends Page {
@@ -50,10 +51,12 @@ class Fulfillment extends Page {
         ];
 
         // Figure out white items to ship.
-        $items = [];
-        foreach ($order->getItems() as $item) {
+        $items = $itemObjects = [];
+        foreach ($order->getItemsToFulfillWithHandler('printful') as $item) {
+            /* @var LineItem $item */
+
             // Prepare the images.
-            $images = $item['product']->getAggregateOption('printful_image', $item);
+            $images = $item->getAggregateOption('printful_image');
             if (empty($images)) {
                 throw new Exception('Printful images not configured.');
             }
@@ -69,12 +72,13 @@ class Fulfillment extends Page {
             // Prepare the rest of the item.
             $items[] = [
                 // Must be unique for each item shipped.
-                'external_id' => $item['checkout_order_item_id'],
+                'external_id' => $item->id,
                 // Description of printful product, including size and color.
-                'variant_id' => $item['product']->getAggregateOption('printful_product', $item),
-                'quantity' => $item['qty'],
+                'variant_id' => $item->getAggregateOption('printful_product'),
+                'quantity' => $item->qty,
                 'files' => $image_array,
             ];
+            $itemObjects[] = $item;
         }
 
         if (empty($items)) {
@@ -92,6 +96,10 @@ class Fulfillment extends Page {
         $client->set('recipient', $recipient);
         $client->set('items', $items);
         if ($client->callPost('/orders')) {
+            foreach ($itemObjects as $item) {
+                $item->markFulfilled();
+            }
+            $order->markFullfilled();
             Messenger::message('The order has been processed.');
             Navigation::redirect('/admin/orders?id=' . $order->id);
         } else {
