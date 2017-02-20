@@ -15,10 +15,10 @@
             <td>Images</td>
         </tr>
     </thead>
-    <?php foreach ($order->getItems() as $item): ?>
+    <?php foreach ($order->getItemsToFulfillWithHandler('printful') as $item): ?>
     <tr>
         <td><input type="checkbox" checked="checked" name="checkout_order_item[<?= $item->id; ?>" value="1" /></td>
-        <td><?= $item->getProduct()->title; ?></td>
+        <td><a href="<?= $item->getProduct()->getURL(); ?>"><?= $item->getProduct()->title; ?></a></td>
         <td><?= $item->getHTMLFormattedOptions(); ?></td>
         <td><?= $item->getAggregateOption('printful_product'); ?></td>
         <td><?= $item->getAggregateOption('printful_image'); ?></td>
