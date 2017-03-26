@@ -99,7 +99,7 @@ class Fulfillment extends Page {
             foreach ($itemObjects as $item) {
                 $item->markFulfilled();
             }
-            $order->markFullfilled();
+            $order->markFulfilled();
             Messenger::message('The order has been processed.');
             Navigation::redirect('/admin/orders?id=' . $order->id);
         } else {
