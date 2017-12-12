@@ -24,11 +24,19 @@ class Fulfillment extends Page {
         return ClientUser::requireAdmin();
     }
 
+    /**
+     * Loads the order for confirmation.
+     */
     public function get() {
         $order = Order::loadByID(Request::get('id', Request::TYPE_INT));
         Template::getInstance()->set('order', $order);
     }
 
+    /**
+     * Submits the fulfillment request.
+     *
+     * @throws Exception
+     */
     public function post() {
         $order = Order::loadByID(Request::post('id', Request::TYPE_INT));
         if (empty($order)) {

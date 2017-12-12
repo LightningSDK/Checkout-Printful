@@ -11,8 +11,8 @@
             <td><input type="checkbox" checked="checked"></td>
             <td>Product</td>
             <td>Options</td>
-            <td>Printful Code</td>
-            <td>Images</td>
+            <td>Printful Product Code</td>
+            <td>Imprint Data</td>
         </tr>
     </thead>
     <?php foreach ($order->getItemsToFulfillWithHandler('printful') as $item): ?>
@@ -21,7 +21,7 @@
         <td><a href="<?= $item->getProduct()->getURL(); ?>"><?= $item->getProduct()->title; ?></a></td>
         <td><?= $item->getHTMLFormattedOptions(); ?></td>
         <td><?= $item->getAggregateOption('printful_product'); ?></td>
-        <td><?= $item->getAggregateOption('printful_image'); ?></td>
+        <td><?= json_encode($item->getAggregateOption('printful_image')); ?></td>
     </tr>
     <?php endforeach; ?>
 </table>
