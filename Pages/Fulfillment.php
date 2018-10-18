@@ -63,29 +63,38 @@ class Fulfillment extends Page {
         foreach ($order->getItemsToFulfillWithHandler('printful') as $item) {
             /* @var LineItem $item */
 
-            // Prepare the images.
-            $images = $item->getAggregateOption('printful_image');
-            if (empty($images)) {
-                throw new Exception('Printful images not configured.');
-            }
-            $image_array = [];
-            if (!is_array($images)) {
-                $images = [$images];
-            }
-            foreach ($images as $i) {
-                // TODO: This should be able to handle images that are saved with metadata.
-                $image_array[] = ['id' => $i];
+            if ($warehouseItem = $item->getAggregateOption('printful_warehouse_variant')) {
+                $items[] = [
+                    'warehouse_product_variant_id' => intval($warehouseItem),
+                    'quantity' => $item->qty,
+                    'retail_price' => $item->amount,
+                ];
+            } elseif ($images = $item->getAggregateOption('printful_image')) {
+                // Prepare the images.
+                $image_array = [];
+                if (!is_array($images)) {
+                    $images = [$images];
+                }
+                foreach ($images as $i) {
+                    // TODO: This should be able to handle images that are saved with metadata.
+                    $image_array[] = ['id' => $i];
+                }
+
+                // Prepare the rest of the item.
+                $items[] = [
+                    // Must be unique for each item shipped.
+                    'external_id' => $item->id,
+                    // Description of printful product, including size and color.
+                    'variant_id' => $item->getAggregateOption('printful_product'),
+                    'quantity' => $item->qty,
+                    'files' => $image_array,
+                    'retail_price' => $item->amount,
+                ];
+            } else {
+                throw new Exception('Printful item not properly configured.');
             }
 
-            // Prepare the rest of the item.
-            $items[] = [
-                // Must be unique for each item shipped.
-                'external_id' => $item->id,
-                // Description of printful product, including size and color.
-                'variant_id' => $item->getAggregateOption('printful_product'),
-                'quantity' => $item->qty,
-                'files' => $image_array,
-            ];
+            // Save the object for later.
             $itemObjects[] = $item;
         }
 
@@ -107,11 +116,12 @@ class Fulfillment extends Page {
             foreach ($itemObjects as $item) {
                 $item->markFulfilled();
             }
+            // This only marks it fulfilled if all items have been.
             $order->markFulfilled();
             Messenger::message('The order has been processed.');
-            Navigation::redirect('/admin/orders?id=' . $order->id);
+            Navigation::redirect('/admin/orders');
         } else {
-            throw new Exception('There was a problem submitting the order.');
+            throw new Exception('There was a problem submitting the order: ' . $client->get('error.message'));
         }
     }
 }
