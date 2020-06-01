@@ -103,7 +103,7 @@ class Fulfillment extends Page {
         }
 
         // Send to printful.
-        $client = new RestClient('https://api.theprintful.com/');
+        $client = new RestClient('https://api.printful.com/');
         $client->sendJSON(true);
 
         $client->setBasicAuth(
