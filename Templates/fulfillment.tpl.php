@@ -3,7 +3,7 @@
 
 <h2>Include Items:</h2>
 <form method="post">
-    <?= \Lightning\Tools\Form::renderTokenInput(); ?>
+    <?= \lightningsdk\core\Tools\Form::renderTokenInput(); ?>
     <input type="hidden" name="id" value="<?= $order->id; ?>">
 <table width="100%">
     <thead>

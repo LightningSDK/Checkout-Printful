@@ -3,14 +3,14 @@
 namespace lightningsdk\checkout_printful\Pages;
 
 use Exception;
-use Lightning\Tools\Messenger;
-use Lightning\Tools\Navigation;
-use Lightning\View\Page;
-use Lightning\Tools\ClientUser;
-use Lightning\Tools\Communicator\RestClient;
-use Lightning\Tools\Configuration;
-use Lightning\Tools\Request;
-use Lightning\Tools\Template;
+use lightningsdk\core\Tools\Messenger;
+use lightningsdk\core\Tools\Navigation;
+use lightningsdk\core\View\Page;
+use lightningsdk\core\Tools\ClientUser;
+use lightningsdk\core\Tools\Communicator\RestClient;
+use lightningsdk\core\Tools\Configuration;
+use lightningsdk\core\Tools\Request;
+use lightningsdk\core\Tools\Template;
 use lightningsdk\checkout\Model\LineItem;
 use lightningsdk\checkout\Model\Order;
 

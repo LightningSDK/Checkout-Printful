@@ -4,6 +4,5 @@
   "description": "Adds Printful integration to Checkout.",
   "version": "3.5.0",
   "require": {
-    "components/jquery": "^3.5"
   }
 }
