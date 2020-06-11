@@ -1,6 +1,6 @@
 <?php
 
-namespace Modules\ThePrintful\Pages;
+namespace lightningsdk\checkout_printful\Pages;
 
 use Exception;
 use Lightning\Tools\Messenger;
@@ -11,13 +11,13 @@ use Lightning\Tools\Communicator\RestClient;
 use Lightning\Tools\Configuration;
 use Lightning\Tools\Request;
 use Lightning\Tools\Template;
-use Modules\Checkout\Model\LineItem;
-use Modules\Checkout\Model\Order;
+use lightningsdk\checkout\Model\LineItem;
+use lightningsdk\checkout\Model\Order;
 
 class Fulfillment extends Page {
 
     protected $rightColumn = false;
-    protected $page = ['fulfillment', 'ThePrintful'];
+    protected $page = ['fulfillment', 'Printful'];
     protected $share = false;
 
     public function hasAccess() {
@@ -107,8 +107,8 @@ class Fulfillment extends Page {
         $client->sendJSON(true);
 
         $client->setBasicAuth(
-            Configuration::get('modules.theprintful.api_user'),
-            Configuration::get('modules.theprintful.api_password'));
+            Configuration::get('modules.printful.api_user'),
+            Configuration::get('modules.printful.api_password'));
         $client->set('external_id', $order->order_id);
         $client->set('recipient', $recipient);
         $client->set('items', $items);
