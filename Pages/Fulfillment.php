@@ -17,7 +17,7 @@ use lightningsdk\checkout\Model\Order;
 class Fulfillment extends Page {
 
     protected $rightColumn = false;
-    protected $page = ['fulfillment', 'Printful'];
+    protected $page = ['fulfillment', 'lightningsdk/printful'];
     protected $share = false;
 
     public function hasAccess() {
